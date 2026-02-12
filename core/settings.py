@@ -132,3 +132,5 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / "uploads"
+
+AUTH_USER_MODEL = "accounts.User"
