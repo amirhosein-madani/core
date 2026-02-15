@@ -51,15 +51,12 @@ class User(AbstractBaseUser , PermissionsMixin):
         unique=True,
     )
     username = models.CharField( max_length=50, unique= True)
-    first_name = models.CharField( max_length=50 , null= True , blank= True)
-    last_name = models.CharField( max_length=50 , blank= True , null= True)
-    date_of_birth = models.DateField(null=True , blank= True)
+   
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default= False)
     is_superuser = models.BooleanField(default=False)
     # is_verified = models.BooleanField()
-    profile_picture = models.ImageField( upload_to="profile_Pictures", blank=True , null=True)
     phone_number =models.CharField(max_length=12,unique=True)
     created_date = models.DateTimeField( auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
@@ -82,3 +79,12 @@ class User(AbstractBaseUser , PermissionsMixin):
         return True
 
 
+class Profile(models.Model):
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    first_name = models.CharField( max_length=50 , null= True , blank= True)
+    last_name = models.CharField( max_length=50 , blank= True , null= True)
+    date_of_birth = models.DateField(null=True , blank= True)
+    created_date = models.DateTimeField( auto_now_add=True)
+    updated_date = models.DateTimeField(auto_now=True)
+    profile_picture = models.ImageField( upload_to="profile_Pictures", blank=True , null=True)
