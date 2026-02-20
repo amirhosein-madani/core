@@ -1,13 +1,18 @@
 from django.db import models
-from accounts.models import User
+from django.contrib.auth import get_user_model 
 from django.urls import reverse
 from django.utils.text import slugify
 # Create your models here.
+
+    
+# getting user model object 
+User = get_user_model()
+
 class Post(models.Model):
     """
   T     this is a class to define posts for blog app 
     """
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
