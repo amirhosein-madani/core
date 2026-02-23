@@ -6,10 +6,6 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>this is post list page </h1>
-    {% for post in posts %}
-        <h2>{{post.title}}</h2>
-     <a href="{{ post.get_absolute_url }}">details</a>  
-    {% endfor %}
+    <h1>{{post.title}}</h1>
 </body>
 </html>

@@ -6,10 +6,12 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>this is post list page </h1>
-    {% for post in posts %}
-        <h2>{{post.title}}</h2>
-     <a href="{{ post.get_absolute_url }}">details</a>  
-    {% endfor %}
+       <br>
+       <form method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+        <input type="submit" value="save">
+        <a href="{% url 'post_delete' post.slug %}">Delete</a>
+
 </body>
 </html>

@@ -6,10 +6,13 @@
     <title>Document</title>
 </head>
 <body>
+    <h1>enter a post to update </h1>
+    <br>
     <h1>this is post list page </h1>
     {% for post in posts %}
         <h2>{{post.title}}</h2>
-     <a href="{{ post.get_absolute_url }}">details</a>  
+       <a href="{% url 'post_update' post.slug %}">Update</a>
     {% endfor %}
+
 </body>
 </html>
