@@ -10,6 +10,7 @@
     {% for post in posts %}
         <h2>{{post.title}}</h2>
      <a href="{{ post.get_absolute_url }}">details</a>  
+     <a href="{% url "post_update" post.slug %}">Update</a>
     {% endfor %}
 </body>
 </html>

@@ -2,11 +2,13 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import  TemplateView , RedirectView , ListView , DeleteView , CreateView , UpdateView , DeleteView
 from .models import Post
+from accounts.mixins import LoginRequiredMixin
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+
 # Create your views here.
 
-class IndesxVIew(TemplateView):
+class IndesxVIew(LoginRequiredMixin , TemplateView):
     template_name = "index.html"
     
     def get_context_data(self, **kwargs):

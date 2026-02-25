@@ -2,6 +2,7 @@ from django import forms
 from .models import User
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
+
 class UserCreationForm(forms.ModelForm):
     """Form for creating regular users and superusers."""
 
@@ -49,3 +50,18 @@ class UserChangeForm(forms.ModelForm):
             "is_superuser",
         ]
 
+class LoginForm(forms.Form):
+    username = forms.CharField(
+        max_length=50,
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Username',
+            'class': 'form-control'
+        })
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'Password',
+            'class': 'form-control',
+            'id': 'password-field'
+        })
+    )
