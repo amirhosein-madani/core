@@ -6,13 +6,13 @@ from django.utils.text import slugify
 
     
 # getting user model object 
-User = get_user_model()
+# User = get_user_model()
 
 class Post(models.Model):
     """
   T     this is a class to define posts for blog app 
     """
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey("accounts.Profile", on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)

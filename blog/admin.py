@@ -8,7 +8,7 @@ class CategoryAdmin(admin.ModelAdmin):
     search_fields = ("name" , )
 
 class PostAdmin(admin.ModelAdmin):
-     list_display = ("author", "title")
+     list_display = ("title", "author")
      search_fields = ("author", "title")
      
 admin.site.register(Post , PostAdmin)

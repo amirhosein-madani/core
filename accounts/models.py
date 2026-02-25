@@ -95,7 +95,7 @@ class Profile(models.Model):
 
 
     def __str__(self):
-        return f"{self.user.username} 's profile"
+        return f"{self.user.username}"
     
 @receiver(post_save , sender= User)
 def save_profile(sender, instance , created , **kwargs):
