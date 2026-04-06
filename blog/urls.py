@@ -1,7 +1,6 @@
 from django.urls import path , include
 from  .views import *
 
-
 urlpatterns = [
     path("index/" , IndesxVIew.as_view() , name = 'index'),
     path("maktab" ,MaktabView.as_view() , name="maktab" ),

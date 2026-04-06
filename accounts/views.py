@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render , redirect
 from .models import User
 
 from .forms import LoginForm
@@ -10,7 +10,7 @@ def user_login(request):
     if request.user.is_authenticated:
 
         return redirect("home")
-
+    
     form = LoginForm()
 
     if request.method == "POST":
@@ -18,15 +18,19 @@ def user_login(request):
         form = LoginForm(request.POST)
 
         if form.is_valid():
+             username = form.cleaned_data.get('username')
+             password = form.cleaned_data.get("password")
+             user = authenticate(request, username=username, password=password)
+     
+             if user is not None:
+
+                    login(request, user)
+                    return redirect("post-detail") 
             
-            cd = form.cleaned_data
-
-            user = authenticate(request , username = username , password = password)
-
-            if user is not None:
-
-                login(request, user)
-
+             else:
+               
+                form.add_error(None, "username or password is incorrect")
+              
     return render(request, 'login.html', context= {'form' : form}) 
 
 

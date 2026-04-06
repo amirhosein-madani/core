@@ -13,13 +13,13 @@ class Post(models.Model):
   T     this is a class to define posts for blog app 
     """
     author = models.ForeignKey("accounts.Profile", on_delete=models.CASCADE)
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200 , blank= True)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True) 
-    published_date = models.DateTimeField()
+    published_date = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to='post_images/', blank=True, null=True)
-    category = models.ForeignKey('Category', on_delete=models.CASCADE, null=True, related_name="posts")
+    category = models.ManyToManyField('Category' , related_name="posts")
     status = models.BooleanField()
     slug = models.SlugField(max_length=255, unique=True, blank=True)
 
@@ -27,8 +27,9 @@ class Post(models.Model):
         return self.title
     
     def get_absolute_url(self):
-        return reverse("post_detail", kwargs={"slug": self.slug})
-    
+        return reverse("post-detail", kwargs={"pk": self.pk})
+    def get_snippet(self):
+        return self.content[0:5]
     def save(self, *args, **kwargs):
         if not self.slug:
             base_slug = slugify(self.title)
@@ -50,7 +51,7 @@ class Category(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse("category_articles", kwargs={"slug": self.slug})
+        return reverse("category-detail", kwargs={"pk": self.pk})
 
     def save(self, *args, **kwargs):
         if not self.slug:

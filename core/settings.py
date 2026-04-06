@@ -23,12 +23,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 
 
+SECRET_KEY = config("SECRET_KEY")
+DEBUG = config("DEBUG", cast=bool)
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')])
+
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -42,9 +44,30 @@ INSTALLED_APPS = [
     'accounts',
     'blog',
     "rest_framework",
-    
+    'django_filters',
+    'drf_spectacular',
+    'drf_spectacular_sidecar',
+
     
 ]
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "core",
+    "DESCRIPTION": "API documentation",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "SWAGGER_UI_DIST": "SIDECAR",
+    "SWAGGER_UI_FAVICON_HREF": "SIDECAR",
+    "REDOC_DIST": "SIDECAR",
+}
+
+
+# drf configs
+REST_FRAMEWORK = {
+
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+
+}
 
 
 MIDDLEWARE = [
@@ -62,10 +85,11 @@ ROOT_URLCONF = "core.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR , "templates"],
+        "DIRS": [BASE_DIR / 'templates'],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
+                "django.template.context_processors.debug",
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
@@ -79,10 +103,6 @@ WSGI_APPLICATION = "core.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-
-SECRET_KEY = config("SECRET_KEY")
-DEBUG = config("DEBUG", cast=bool)
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')])
 
 DATABASES = {
     "default": {
@@ -127,12 +147,27 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = "static/"
-STARIIC_ROOT = BASE_DIR / 'static'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
+STARIIC_ROOT = BASE_DIR / 'statics'
+STATICFILES_DIRS = [BASE_DIR / 'static']    
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / "uploads"
 
 AUTH_USER_MODEL = "accounts.User"
+
+#  restftramework settings
+
+# REST_FRAMEWORK = {
+# #     'DEFAULT_PERMISSION_CLASSES': [
+# #         'rest_framework.permissions.IsAuthenticated',
+# #     ]
+# }
+
+
+
+
+
+
+
+
+

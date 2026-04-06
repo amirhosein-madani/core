@@ -6,6 +6,7 @@ from accounts.mixins import LoginRequiredMixin
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+
 # Create your views here.
 
 class IndesxVIew(LoginRequiredMixin , TemplateView):
@@ -22,7 +23,7 @@ class MaktabView(RedirectView):
     """
     # url = "https://maktabkhooneh.org/"
     pattern_name = "index"
-    
+
 
 class ProductListView(ListView):
     model = Post
