@@ -1,0 +1,7 @@
+from django.urls import path , include
+
+urlpatterns = [
+    path('' , include('accounts.api.v1.urls.account') ),
+    path('' , include('accounts.api.v1.urls.profile') )
+
+]
