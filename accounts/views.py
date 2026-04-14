@@ -9,7 +9,7 @@ def user_login(request):
 
     if request.user.is_authenticated:
 
-        return redirect("home")
+        return redirect("post_list")
     
     form = LoginForm()
 
@@ -25,7 +25,7 @@ def user_login(request):
              if user is not None:
 
                     login(request, user)
-                    return redirect("post-detail") 
+                    return redirect("post_list") 
             
              else:
                

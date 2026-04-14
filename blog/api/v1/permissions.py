@@ -20,3 +20,9 @@ class IsAdminOrReadOnly(permissions.BasePermission):
                   return True
 
             return request.user.is_staff
+
+
+class IsNotAuthenticated(permissions.BasePermission):
+
+   def has_permission(self, request, view):
+        return not request.user.is_authenticated
