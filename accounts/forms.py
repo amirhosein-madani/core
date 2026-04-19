@@ -48,6 +48,7 @@ class UserChangeForm(forms.ModelForm):
             "is_admin",
             "is_staff",
             "is_superuser",
+            'is_verified',
         ]
 
 class LoginForm(forms.Form):

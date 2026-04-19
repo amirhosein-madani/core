@@ -38,6 +38,7 @@ class UserManager(BaseUserManager):
         user.is_admin = True
         user.is_staff = True
         user.is_superuser = True
+        user.is_verified = True
         user.save(using=self._db)
         return user
 
@@ -59,7 +60,7 @@ class User(AbstractBaseUser , PermissionsMixin):
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default= False)
     is_superuser = models.BooleanField(default=False)
-    # is_verified = models.BooleanField()
+    is_verified = models.BooleanField(default= False)
     phone_number =models.CharField(max_length=12,unique=True)
     created_date = models.DateTimeField( auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)

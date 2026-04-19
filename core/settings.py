@@ -27,7 +27,8 @@ SECRET_KEY = config("SECRET_KEY")
 DEBUG = config("DEBUG", cast=bool)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')])
 
-
+# email configuration
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     'blog',
     "rest_framework",
     'rest_framework.authtoken', 
+    'rest_framework_simplejwt', 
     'django_filters',
     'drf_spectacular',
     'drf_spectacular_sidecar',

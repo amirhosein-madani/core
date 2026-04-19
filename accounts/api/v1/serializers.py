@@ -14,7 +14,7 @@ class RegisterationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model =  User
-        fields = ['username' , 'password', 'confirm_password']
+        fields = ['username', 'email', 'phone_number', 'password', 'confirm_password']
 
     def validate(self, attrs):
 
@@ -40,21 +40,33 @@ class RegisterationSerializer(serializers.ModelSerializer):
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    
-    '''
-    this is a custom  serializer to add extera content to show 
-    '''
+    """
+    Custom serializer to add extra content to the token response.
+    """
 
     def validate(self, attrs):
-
+        # Authenticate user and get token data
         validated_data = super().validate(attrs)
+
+        # Check if user is verified after authentication
+        if not self.user.is_verified:
+            raise serializers.ValidationError(
+                {'detail': 'This user is not verified.'}
+            )
+
+        # Add extra fields to response
         validated_data['email'] = self.user.email
         validated_data['user_id'] = self.user.id
 
         return validated_data
 
 
+
 class ChangePasswordSerializer(serializers.Serializer):
+
+    '''
+        this is a serializer to change user's password
+    '''
 
     old_password = serializers.CharField()
     new_password = serializers.CharField()
@@ -90,6 +102,9 @@ class ChangePasswordSerializer(serializers.Serializer):
             
 
 class ProfileSerializer(serializers.ModelSerializer):
+    '''
+    this is a serializer to show user's profile
+    '''
 
     user = serializers.CharField(read_only= True)
     email = serializers.EmailField(source= 'user.email' ,read_only= True)

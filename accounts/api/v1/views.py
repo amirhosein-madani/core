@@ -1,7 +1,9 @@
 from rest_framework import   status
+from  django.shortcuts import get_object_or_404
+from django.core.mail import send_mail
 from rest_framework.permissions import  IsAuthenticated
-from blog.api.v1.permissions import IsNotAuthenticated
-from rest_framework.generics import GenericAPIView , RetrieveUpdateAPIView
+from blog.api.v1.permissions import IsNotAuthenticated 
+from rest_framework.generics import GenericAPIView , RetrieveUpdateAPIView 
 from .serializers import RegisterationSerializer , CustomTokenObtainPairSerializer , ChangePasswordSerializer , ProfileSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -34,15 +36,19 @@ class CustomObtainAuthToken(ObtainAuthToken):
     '''
     this is a views to create a auth_token for a user
     '''
-
     def post(self, request, *args, **kwargs):
+
         serializer = self.serializer_class(
             data=request.data,
             context={'request': request}
         )
         serializer.is_valid(raise_exception=True)
+
         user = serializer.validated_data['user']
-        
+
+        if not user.is_verified:
+          return Response({'detail' : 'this user is not verified'} , status= status.HTTP_400_BAD_REQUEST)
+
         token, created = Token.objects.get_or_create(user=user)
         
         return Response({
@@ -54,12 +60,13 @@ class CustomObtainAuthToken(ObtainAuthToken):
 
 
 class  CustomDiscardAuthToken(APIView):
+
     '''
         this is a view to delete auth_token for a user 
     '''
 
-    permission_classes = [IsAuthenticated]
-
+    permission_classes = [IsAuthenticated ]
+    
     def post(self,request):
         request.user.auth_token.delete()
 
@@ -67,9 +74,13 @@ class  CustomDiscardAuthToken(APIView):
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
-    
+
+    '''
+        this is a view to create JWT token
+    '''
+
     serializer_class = CustomTokenObtainPairSerializer
-   
+
 
 class ChangePasswordApiView(GenericAPIView):
  
@@ -94,6 +105,20 @@ class ProfileApiView(RetrieveUpdateAPIView):
 
     def get_object(self):
             
-            return Profile.objects.get(user= self.request.user)
+            return get_object_or_404(Profile , user= self.request.user)
     
     
+class TestEmailApiVIew(GenericAPIView):
+
+        def post(self, request , *args, **kwargs):
+
+            send_mail(
+            "Subject here",
+            "Here is the message.",
+            "amirmadani901@gmail.com",
+            ["to@example.com"],
+            fail_silently=False,
+        )
+            
+            return Response ("email testes")
+
