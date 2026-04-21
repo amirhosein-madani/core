@@ -10,13 +10,16 @@ path('register/' , RegisterationAPIView.as_view() , name = 'register'),
 # change password
 path('change-password/' , ChangePasswordApiView.as_view() , name = 'change_password' ),
 # reset password
+path('request-to-reset-password/' , ResetPasswordRequestApiView.as_view() , name = 'request_to_reset_password'),
+path('reset-password/<str:token>' , ResetPasswordApiView.as_view() , name = 'reset_password'),
+
 # login token
 path('token-login/', CustomObtainAuthToken.as_view() , name = 'token-login'),
 path('token-logout/', CustomDiscardAuthToken.as_view() , name = 'token-logout'),
 # activation
-path("test/email/" , TestEmailApiVIew.as_view() , name = 'test-email'),
-# path('activation/confrim/')
+path('email-verification/<str:token>' , VerificationApiView.as_view() , name = 'email-verification'),
 # resend activation
+path('resend-email-verification/' , ResendVerificationApiView.as_view() , name = 'resend-verification'),
 # path('activation/resend/')
 # login jwt
 path('jwt/create/' , CustomTokenObtainPairView.as_view() , name = 'jwt-create'),

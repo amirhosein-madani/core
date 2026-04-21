@@ -22,13 +22,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-
 SECRET_KEY = config("SECRET_KEY")
 DEBUG = config("DEBUG", cast=bool)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')])
 
 # email configuration
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp4dev' 
+EMAIL_PORT = 25      
+EMAIL_USE_TLS = False
+EMAIL_HOST_USER = ''  
+EMAIL_HOST_PASSWORD = ''  
+
+
+TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django.TemplateBackend'
+TEMPLATED_EMAIL_TEMPLATE_DIR = 'email/'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
@@ -46,6 +55,7 @@ INSTALLED_APPS = [
     'blog',
     "rest_framework",
     'rest_framework.authtoken', 
+    'templated_email',
     'rest_framework_simplejwt', 
     'django_filters',
     'drf_spectacular',
@@ -174,9 +184,4 @@ AUTH_USER_MODEL = "accounts.User"
 
 
 
-
-
-
-
-
-
+FRONTEND_URL = 'http://localhost:3000/accounts/api/v1/'

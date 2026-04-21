@@ -4,21 +4,27 @@ from django.core.mail import send_mail
 from rest_framework.permissions import  IsAuthenticated
 from blog.api.v1.permissions import IsNotAuthenticated 
 from rest_framework.generics import GenericAPIView , RetrieveUpdateAPIView 
-from .serializers import RegisterationSerializer , CustomTokenObtainPairSerializer , ChangePasswordSerializer , ProfileSerializer
+from .serializers import *
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from ...models import Profile
 from rest_framework_simplejwt.views import TokenObtainPairView
-from django.contrib.auth import get_user_model
+from rest_framework_simplejwt.tokens import RefreshToken , AccessToken
+from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
+from django.conf import settings
+from django.contrib.auth import get_user_model , login
+from templated_email import send_templated_mail
 
 User = get_user_model()
 
 class RegisterationAPIView(GenericAPIView):
+
     '''
         this is a view for register a user 
     '''
+
     serializer_class = RegisterationSerializer
     permission_classes = [IsNotAuthenticated]
 
@@ -27,9 +33,34 @@ class RegisterationAPIView(GenericAPIView):
         serializer = self.serializer_class(data= request.data)
         serializer.is_valid(raise_exception=True) 
         serializer.save()
-        data = {'username' : serializer.validated_data['username']}
-        return Response(data ,status= status.HTTP_201_CREATED )
 
+        email = serializer.validated_data['email']
+
+        user = get_object_or_404(User, email = email )
+        token = self.get_token_for_user(user)
+        access_token = token['access_token']
+ 
+        send_templated_mail(
+            template_name='test-email',
+            from_email='noreply@example.com',
+            recipient_list=[user.email],
+            context={
+                'user': user,
+                'site_name': 'localhost',
+                'access_token' : access_token
+            }
+        )
+
+        return Response(
+            {'details': f'Account created for {user.username}. Verification email sent to {email}.'},
+            status=status.HTTP_201_CREATED
+        )
+
+    def get_token_for_user(self,user):
+
+         refresh = RefreshToken.for_user(user)
+         access_token = str(refresh.access_token)
+         return {'access_token': access_token}
 
 class CustomObtainAuthToken(ObtainAuthToken):
 
@@ -47,7 +78,7 @@ class CustomObtainAuthToken(ObtainAuthToken):
         user = serializer.validated_data['user']
 
         if not user.is_verified:
-          return Response({'detail' : 'this user is not verified'} , status= status.HTTP_400_BAD_REQUEST)
+          return Response({'details' : 'this user is not verified'} , status= status.HTTP_400_BAD_REQUEST)
 
         token, created = Token.objects.get_or_create(user=user)
         
@@ -95,7 +126,7 @@ class ChangePasswordApiView(GenericAPIView):
         request.user.set_password(serializer.validated_data['new_password'])
         request.user.save()
 
-        return Response({'detail' : 'password updated'} , status= status.HTTP_200_OK)
+        return Response({'details' : 'password updated'} , status= status.HTTP_200_OK)
 
 
 class ProfileApiView(RetrieveUpdateAPIView):
@@ -108,17 +139,137 @@ class ProfileApiView(RetrieveUpdateAPIView):
             return get_object_or_404(Profile , user= self.request.user)
     
     
-class TestEmailApiVIew(GenericAPIView):
+class VerificationApiView(APIView):
 
-        def post(self, request , *args, **kwargs):
+    permission_classes = [IsNotAuthenticated]
 
-            send_mail(
-            "Subject here",
-            "Here is the message.",
-            "amirmadani901@gmail.com",
-            ["to@example.com"],
-            fail_silently=False,
+    def get(self , request , token , *args, **kwargs):
+
+        try:
+
+            access_token = AccessToken(token)
+            user_id = access_token['user_id']
+
+            user = User.objects.get(id=user_id)
+            user.is_verified = True
+            user.save()
+
+            login(request , user)
+
+            return Response(
+                {'details': 'Email verified successfully'},
+                status=status.HTTP_200_OK
+            )
+
+        except Exception as e:
+
+            return Response(
+                {'details': 'Invalid or expired token'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+
+class ResendVerificationApiView(APIView):
+
+    permission_classes = [IsNotAuthenticated]
+    serializer_class =  SendEmailSerializer
+
+    def post(self,request , *args, **kwargs):
+
+        serializer = self.serializer_class(data = request.data)
+        serializer.is_valid(raise_exception=True) 
+        user = serializer.validated_data['user']
+        token = self.get_token_for_user(user)
+        access_token = token['access_token']
+    
+        send_templated_mail(
+                template_name='test-email',
+                from_email='noreply@example.com',
+                recipient_list=[user.email],
+                context={
+                    'user': user,
+                    'site_name': 'localhost',
+                    'access_token' : access_token
+                }
+            )
+
+        return Response(
+                {'details': f'Verification email sent to {user.email}.'},
+                status=status.HTTP_200_OK
+            )
+  
+
+    def get_token_for_user(self,user):
+
+         refresh = RefreshToken.for_user(user)
+         access_token = str(refresh.access_token)
+         return {'access_token': access_token}
+
+
+class ResetPasswordRequestApiView(GenericAPIView):
+    permission_classes = [IsNotAuthenticated]
+    serializer_class = SendEmailSerializer
+    def post(self,request , *args, **kwargs):
+
+        serializer = self.serializer_class(data= request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token = self.get_token_for_user(user)
+        access_token = token['access_token']
+    
+        send_templated_mail(
+                template_name='reset-password',
+                from_email='noreply@example.com',
+                recipient_list=[user.email],
+                context={
+                    'user': user,
+                    'site_name': 'localhost',
+                    'access_token' : access_token
+                }
+            )
+        return Response({'details': f'we sent a email to {user.email}' } , status= status.HTTP_200_OK)
+    
+    def get_token_for_user(self,user):
+
+         refresh = RefreshToken.for_user(user)
+         access_token = str(refresh.access_token)
+         return {'access_token': access_token}
+
+
+        
+class ResetPasswordApiView(GenericAPIView):
+
+    serializer_class = ResetPasswordSerializer  
+    permission_classes = [IsNotAuthenticated]
+
+    def post(self,request , token ,  *args, **kwargs):
+
+          try:
+
+            access_token = AccessToken(token)
+            user_id = access_token['user_id']
+            user = User.objects.get(id=user_id)
+
+          except (TokenError, InvalidToken):
+
+            return Response(
+                {'detail': 'Invalid or expired token'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+          except User.DoesNotExist:
+                 return Response(
+                {'detail': 'user does not exsit'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+          serializer = self.serializer_class(
+            data=request.data, context = {'user' : user}
         )
-            
-            return Response ("email testes")
+          serializer.is_valid(raise_exception=True)     
+          login(request, user)
+          return Response(
+              {'message': 'Password reset successfully'},
+             status=status.HTTP_200_OK
+                )
 
+            

@@ -113,3 +113,58 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = '__all__'
 
+class SendEmailSerializer(serializers.Serializer):
+
+    '''
+        this is a serializer to resend a verification email to user 
+    '''
+
+    email = serializers.EmailField()
+
+    def validate(self , attrs):
+
+        email = attrs.get('email')
+
+        try:
+
+            user = User.objects.get(email= email)
+
+        except User.DoesNotExist:
+
+            raise serializers.ValidationError("this email does not match any user.")
+        
+        # if user.is_verified:
+
+        #     raise serializers.ValidationError("this user is already verified.")
+
+        attrs['user'] = user
+        return attrs
+            
+
+
+class ResetPasswordSerializer(serializers.Serializer):
+  
+    password = serializers.CharField(required= True)
+    confirm_password = serializers.CharField(required= True)
+    
+    def validate(self, attrs):
+
+         user = self.context.get('user')
+         if user and user.check_password(attrs.get('password')):
+            raise serializers.ValidationError({'detail': 'New password cannot be the same as old password'})
+    
+         if attrs.get('password') != attrs.get('confirm_password'):
+                
+            raise serializers.ValidationError({'detail': 'passwords does not match'})
+
+         try:
+
+             validate_password(attrs.get('password') )
+
+         except exceptions.ValidationError as e:
+
+             raise serializers.ValidationError({'passwords' : list(e.messages)})
+           
+         user.set_password(attrs.get('password'))
+         user.save()
+         return attrs
