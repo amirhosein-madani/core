@@ -1,20 +1,17 @@
 # from rest_framework.response import Response
 # from rest_framework.decorators import api_view , permission_classes
-# from rest_framework.views import APIView 
+# from rest_framework.views import APIView
 # from django.shortcuts import get_object_or_404
 # from django_filters import rest_framework as filters
-from rest_framework import status , viewsets
-from rest_framework.permissions import IsAuthenticatedOrReadOnly , IsAuthenticated
-from .permissions import IsOwnerOrReadOnly , IsAdminOrReadOnly
-from .serializers import PostSerializer , CategorySerializer
-from ...models import Post , Category
-from rest_framework.generics import ListCreateAPIView , RetrieveUpdateDestroyAPIView
+from rest_framework import status, viewsets
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from .permissions import IsOwnerOrReadOnly, IsAdminOrReadOnly
+from .serializers import PostSerializer, CategorySerializer
+from ...models import Post, Category
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import SearchFilter , OrderingFilter
+from rest_framework.filters import SearchFilter, OrderingFilter
 from .paginations import DefaultPagination
-
-
-
 
 # @api_view(["GET","POST"])
 # @permission_classes([IsAuthenticated])
@@ -33,9 +30,6 @@ from .paginations import DefaultPagination
 #         return Response (serializers.data)
 
 
-
-        
-
 # @api_view(["GET" , "PUT" , "DELETE"])
 # def post_detail(request , id):
 
@@ -49,7 +43,7 @@ from .paginations import DefaultPagination
 #   elif request.method == "PUT":
 
 #         serializers = PostSerializer(post,data= request.data)
-#         serializers.is_valid(raise_exception=True)  
+#         serializers.is_valid(raise_exception=True)
 #         serializers.save()
 #         return Response (serializers.data)
 
@@ -61,7 +55,7 @@ from .paginations import DefaultPagination
 # ""
 # class PostListView(APIView):
 #       '''
-#             getting a list of posts and create posts 
+#             getting a list of posts and create posts
 #       '''
 #       permission_classes = [IsAuthenticatedOrReadOnly]
 #       serializer_class = PostSerializer
@@ -93,12 +87,12 @@ from .paginations import DefaultPagination
 
 #       def get(self , request , id ):
 #             '''
-#             show data of the post 
+#             show data of the post
 #             '''
 #             post = get_object_or_404(Post,id = id)
 #             serializers = self.serializer_class(post)
 #             return Response(serializers.data)
-      
+
 #       def post(self , request, id ):
 #              '''
 #              updata detail of the post data
@@ -119,52 +113,44 @@ from .paginations import DefaultPagination
 
 
 class PostListView(ListCreateAPIView):
-      '''
-        getting a list of posts and create posts 
-      '''
-      permission_classes = [IsAuthenticatedOrReadOnly]
-      serializer_class = PostSerializer
-      queryset = Post.objects.all()
-      
+    """
+    getting a list of posts and create posts
+    """
 
-  
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()
+
+
 class PostDetailView(RetrieveUpdateDestroyAPIView):
-          """
-          detail of the post and edit and removing it.
-          """
-          queryset = Post.objects.all() 
-          permission_classes = [IsAuthenticatedOrReadOnly]
-          serializer_class = PostSerializer
-          lookup_field = 'id'
+    """
+    detail of the post and edit and removing it.
+    """
 
+    queryset = Post.objects.all()
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = PostSerializer
+    lookup_field = "id"
 
 
 class PostModelViewSet(viewsets.ModelViewSet):
 
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = [IsAuthenticated , IsOwnerOrReadOnly , IsAdminOrReadOnly]
-    filter_backends = [DjangoFilterBackend , SearchFilter , OrderingFilter]
-    filterset_fields = {'category' : ["exact"] , 'author' : ['in']}
-    search_fields = ['title' , 'content']
-    ordering_fields = ['published_date' ]
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly, IsAdminOrReadOnly]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = {"category": ["exact"], "author": ["in"]}
+    search_fields = ["title", "content"]
+    ordering_fields = ["published_date"]
     pagination_class = DefaultPagination
     #  = $ @
+
 
 class CategoryModelViewSet(viewsets.ModelViewSet):
 
     queryset = Category.objects.all()
-    permission_classes = [IsAuthenticated , IsAdminOrReadOnly] 
+    permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
     serializer_class = CategorySerializer
-
-
-
-
-
-
-
-
-
 
 
 # class ProductFilter(filters.FilterSet):

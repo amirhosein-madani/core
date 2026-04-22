@@ -48,21 +48,23 @@ class UserChangeForm(forms.ModelForm):
             "is_admin",
             "is_staff",
             "is_superuser",
-            'is_verified',
+            "is_verified",
         ]
+
 
 class LoginForm(forms.Form):
     username = forms.CharField(
         max_length=50,
-        widget=forms.TextInput(attrs={
-            'placeholder': 'Username',
-            'class': 'form-control'
-        })
+        widget=forms.TextInput(
+            attrs={"placeholder": "Username", "class": "form-control"}
+        ),
     )
     password = forms.CharField(
-        widget=forms.PasswordInput(attrs={
-            'placeholder': 'Password',
-            'class': 'form-control',
-            'id': 'password-field'
-        })
+        widget=forms.PasswordInput(
+            attrs={
+                "placeholder": "Password",
+                "class": "form-control",
+                "id": "password-field",
+            }
+        )
     )

@@ -9,21 +9,19 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
             return True
 
         return obj.author.user == request.user
-        
 
 
 class IsAdminOrReadOnly(permissions.BasePermission):
 
-       def has_permission(self, request, view):
+    def has_permission(self, request, view):
 
-            if request.method in permissions.SAFE_METHODS:
-                  return True
+        if request.method in permissions.SAFE_METHODS:
+            return True
 
-            return request.user.is_staff
+        return request.user.is_staff
 
 
 class IsNotAuthenticated(permissions.BasePermission):
 
-   def has_permission(self, request, view):
+    def has_permission(self, request, view):
         return not request.user.is_authenticated
-

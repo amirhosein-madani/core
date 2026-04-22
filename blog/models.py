@@ -1,35 +1,40 @@
 from django.db import models
-from django.contrib.auth import get_user_model 
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils.text import slugify
+
 # Create your models here.
 
-    
-# getting user model object 
+
+# getting user model object
 # User = get_user_model()
+
 
 class Post(models.Model):
     """
-  T     this is a class to define posts for blog app 
+    T     this is a class to define posts for blog app
     """
+
     author = models.ForeignKey("accounts.Profile", on_delete=models.CASCADE)
-    title = models.CharField(max_length=200 , blank= True)
+    title = models.CharField(max_length=200, blank=True)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True) 
+    updated_at = models.DateTimeField(auto_now=True)
     published_date = models.DateTimeField(auto_now_add=True)
-    image = models.ImageField(upload_to='post_images/', blank=True, null=True)
-    category = models.ManyToManyField('Category' , related_name="posts")
+    image = models.ImageField(upload_to="post_images/", blank=True, null=True)
+    category = models.ManyToManyField("Category", related_name="posts")
     status = models.BooleanField()
     slug = models.SlugField(max_length=255, unique=True, blank=True)
 
     def __str__(self):
         return self.title
-    
+
     def get_absolute_url(self):
         return reverse("post-detail", kwargs={"pk": self.pk})
+
     def get_snippet(self):
         return self.content[0:5]
+
     def save(self, *args, **kwargs):
         if not self.slug:
             base_slug = slugify(self.title)
@@ -40,6 +45,7 @@ class Post(models.Model):
                 counter += 1
             self.slug = slug
         super().save(*args, **kwargs)
+
 
 class Category(models.Model):
     name = models.CharField(max_length=50, unique=True)
