@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
-from rest_framework.generics import GenericAPIView , RetrieveUpdateAPIView
+from rest_framework.generics import GenericAPIView, RetrieveUpdateAPIView
 from rest_framework.response import Response
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
@@ -9,7 +9,6 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 from django.shortcuts import get_object_or_404
-from django.conf import settings
 from django.contrib.auth import get_user_model, login
 from .serializers import *
 from templated_email import send_templated_mail
@@ -52,7 +51,7 @@ class RegisterationAPIView(GenericAPIView):
 
         return Response(
             {
-                "details": f"Account created for {user.username}. Verification email sent to {email}."
+                "details": f"Account created for {user.username}. Verification email sent to {email}. you have to verify to have full access to our site"
             },
             status=status.HTTP_201_CREATED,
         )

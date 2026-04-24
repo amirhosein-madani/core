@@ -10,3 +10,5 @@ exclude =
      env,
    */migrations/*,  
    .git,
+   tests.py
+ignore = F403,F405

@@ -3,7 +3,7 @@
 # from rest_framework.views import APIView
 # from django.shortcuts import get_object_or_404
 # from django_filters import rest_framework as filters
-from rest_framework import status, viewsets
+from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from .permissions import IsOwnerOrReadOnly, IsAdminOrReadOnly
 from .serializers import PostSerializer, CategorySerializer
