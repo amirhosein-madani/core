@@ -34,7 +34,7 @@ class MaktabView(RedirectView):
     pattern_name = "index"
 
 
-class ProductListView(ListView):
+class PostListView(ListView):
     model = Post
     # queryset = Post.objects.all()
     context_object_name = "posts"

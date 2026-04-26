@@ -4,7 +4,7 @@ from .views import *
 urlpatterns = [
     path("index/", IndesxVIew.as_view(), name="index"),
     path("maktab", MaktabView.as_view(), name="maktab"),
-    path("post-list/", ProductListView.as_view(), name="post_list"),
+    path("post-list/", PostListView.as_view(), name="post_list"),
     path("api/", api_test, name="api_test"),
     path("post_detail/<slug:slug>", PostDetailView.as_view(), name="post_detail"),
     path("create_post/", CreatePostView.as_view(), name="create_post"),

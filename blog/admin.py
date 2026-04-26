@@ -11,7 +11,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ("title", "author")
+    list_display = ('id',"title", "author")
     search_fields = ("author", "title")
 
 

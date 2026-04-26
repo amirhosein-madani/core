@@ -51,7 +51,7 @@ class RegisterationAPIView(GenericAPIView):
 
         return Response(
             {
-                "details": f"Account created for {user.username}. Verification email sent to {email}. you have to verify to have full access to our site"
+                "details": f"Account created for {user.username}. Verification email sent to {email}. you need to verify to have full access to our site"
             },
             status=status.HTTP_201_CREATED,
         )
