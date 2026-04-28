@@ -12,7 +12,7 @@ from django.utils.text import slugify
 
 class Post(models.Model):
     """
-    T     this is a class to define posts for blog app
+    Tthis is a class to define posts for blog app
     """
 
     author = models.ForeignKey("accounts.Profile", on_delete=models.CASCADE)

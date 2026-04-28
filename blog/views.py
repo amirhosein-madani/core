@@ -46,7 +46,7 @@ class PostListView(ListView):
     #     return posts
 
 
-class PostDetailView(DeleteView):
+class PostDetailView(LoginRequiredMixin, DeleteView):
     model = Post
     template_name = "post_detail.html"
 

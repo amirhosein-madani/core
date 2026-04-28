@@ -1,0 +1,38 @@
+[33mebf8643[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m HEAD@{0}: reset: moving to HEAD~1
+[33m388ac15[m HEAD@{1}: checkout: moving from spread-models-and-views to master
+[33m77bc47a[m[33m ([m[1;32mspread-models-and-views[m[33m)[m HEAD@{2}: checkout: moving from master to spread-models-and-views
+[33m388ac15[m HEAD@{3}: commit: add test folder
+[33mebf8643[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m HEAD@{4}: checkout: moving from master to master
+[33mebf8643[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m HEAD@{5}: commit: change email template design
+[33m3dc679a[m HEAD@{6}: commit: add flake and black
+[33m5a1cb0c[m HEAD@{7}: commit: Add black and flake8
+[33m36e2d0f[m HEAD@{8}: commit: add reset password to project
+[33maf64a8b[m HEAD@{9}: commit: insttal smto4dev
+[33m6f44bf6[m HEAD@{10}: checkout: moving from spread-models-and-views to master
+[33m77bc47a[m[33m ([m[1;32mspread-models-and-views[m[33m)[m HEAD@{11}: commit: remove views
+[33m33ef38a[m HEAD@{12}: checkout: moving from master to spread-models-and-views
+[33m6f44bf6[m HEAD@{13}: checkout: moving from spread-models-and-views to master
+[33m33ef38a[m HEAD@{14}: commit: added
+[33m6f44bf6[m HEAD@{15}: checkout: moving from master to spread-models-and-views
+[33m6f44bf6[m HEAD@{16}: checkout: moving from spread-models-and-views to master
+[33m6f44bf6[m HEAD@{17}: checkout: moving from master to spread-models-and-views
+[33m6f44bf6[m HEAD@{18}: commit: add accounts api
+[33m450dc07[m HEAD@{19}: commit: add api documentaion
+[33m229f886[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{20}: checkout: moving from master to master
+[33m229f886[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{21}: checkout: moving from master to master
+[33m229f886[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{22}: merge origin/migrate-blog-to-profile: Fast-forward
+[33m08471c0[m HEAD@{23}: checkout: moving from migrate-blog-to-profile to master
+[33m229f886[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{24}: checkout: moving from master to migrate-blog-to-profile
+[33m08471c0[m HEAD@{25}: checkout: moving from migrate-blog-to-profile to master
+[33m229f886[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{26}: checkout: moving from master to migrate-blog-to-profile
+[33m08471c0[m HEAD@{27}: checkout: moving from migrate-blog-to-profile to master
+[33m229f886[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{28}: checkout: moving from master to migrate-blog-to-profile
+[33m08471c0[m HEAD@{29}: checkout: moving from migrate-blog-to-profile to master
+[33m229f886[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{30}: commit: migrated user in post in profile
+[33m08471c0[m HEAD@{31}: checkout: moving from migrate-blog-to-profile to migrate-blog-to-profile
+[33m08471c0[m HEAD@{32}: checkout: moving from master to migrate-blog-to-profile
+[33m08471c0[m HEAD@{33}: checkout: moving from migrate-blog-to-profile to master
+[33m08471c0[m HEAD@{34}: checkout: moving from migrate-blog-to-profile to migrate-blog-to-profile
+[33m08471c0[m HEAD@{35}: checkout: moving from master to migrate-blog-to-profile
+[33m08471c0[m HEAD@{36}: commit: add api versioning to project
+[33m1f91b39[m HEAD@{37}: clone: from https://github.com/amirmad2007/core
