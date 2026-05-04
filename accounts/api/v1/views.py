@@ -51,7 +51,10 @@ class RegisterationAPIView(GenericAPIView):
 
         return Response(
             {
-                "details": f"Account created for {user.username}. Verification email sent to {email}. you need to verify to have full access to our site"
+                "details": (
+                    f"Account created for {user.username}. Verification email sent to "
+                    f"{email}. you need to verify to have full access to our site"
+                )
             },
             status=status.HTTP_201_CREATED,
         )
@@ -164,7 +167,7 @@ class VerificationApiView(APIView):
                 {"details": "Email verified successfully"}, status=status.HTTP_200_OK
             )
 
-        except Exception as e:
+        except Exception:
 
             return Response(
                 {"details": "Invalid or expired token"},

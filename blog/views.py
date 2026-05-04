@@ -6,7 +6,6 @@ from django.views.generic import (
     DeleteView,
     CreateView,
     UpdateView,
-    DeleteView,
 )
 from .models import Post
 from accounts.mixins import LoginRequiredMixin

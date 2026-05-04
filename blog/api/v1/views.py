@@ -4,7 +4,7 @@
 # from django.shortcuts import get_object_or_404
 # from django_filters import rest_framework as filters
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .permissions import IsOwnerOrReadOnly, IsAdminOrReadOnly
 from .serializers import PostSerializer, CategorySerializer
 from ...models import Post, Category
@@ -49,7 +49,8 @@ from .paginations import DefaultPagination
 
 #   elif request.method == "DELETE":
 #         post.delete()
-#         return Response({"detail": "item removed successfully"} , status = status.HTTP_204_NO_CONTENT)
+#         return Response({"detail": "item removed successfully"} ,
+#         status = status.HTTP_204_NO_CONTENT)
 
 
 # ""
@@ -109,7 +110,8 @@ from .paginations import DefaultPagination
 #              '''
 #              post = get_object_or_404(Post,id = id)
 #              post.delete()
-#              return Response({"detail": "item removed successfully"} , status = status.HTTP_204_NO_CONTENT)
+#              return Response({"detail": "item removed successfully"} ,
+#              status = status.HTTP_204_NO_CONTENT)
 
 
 class PostListView(ListCreateAPIView):
@@ -137,7 +139,11 @@ class PostModelViewSet(viewsets.ModelViewSet):
 
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly, IsAdminOrReadOnly]
+    permission_classes = [
+        IsAuthenticatedOrReadOnly,
+        IsOwnerOrReadOnly,
+        IsAdminOrReadOnly,
+    ]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = {"category": ["exact"], "author": ["in"]}
     search_fields = ["title", "content"]

@@ -21,7 +21,6 @@ from django.conf.urls.static import static
 from django.conf import settings
 from drf_spectacular.views import (
     SpectacularAPIView,
-    SpectacularRedocView,
     SpectacularSwaggerView,
 )
 

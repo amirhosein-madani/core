@@ -1,6 +1,6 @@
-from django.test import TestCase, SimpleTestCase
+from django.test import SimpleTestCase
 from django.urls import reverse, resolve
-from ..views import IndesxVIew, PostListView, MaktabView, PostDetailView
+from ..views import IndesxVIew, PostListView, PostDetailView
 
 # Create your tests here.
 

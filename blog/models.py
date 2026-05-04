@@ -20,7 +20,7 @@ class Post(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    published_date = models.DateTimeField(auto_now_add=True)
+    published_date = models.DateTimeField()
     image = models.ImageField(upload_to="post_images/", blank=True, null=True)
     category = models.ManyToManyField("Category", related_name="posts")
     status = models.BooleanField()

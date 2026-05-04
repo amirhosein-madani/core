@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.utils import timezone
 from ..models import Post
-from accounts.models import User, Profile
+from accounts.models import User
 
 
 class TestPost(TestCase):

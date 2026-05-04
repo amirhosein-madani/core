@@ -134,7 +134,7 @@ class SendEmailSerializer(serializers.Serializer):
 
         # if user.is_verified:
 
-        #     raise serializers.ValidationError("this user is already verified.")
+        # raise serializers.ValidationError("this user is already verified.")
 
         attrs["user"] = user
         return attrs
