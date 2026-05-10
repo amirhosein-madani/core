@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لیست پست‌ها</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Tahoma', sans-serif;
+            background: #f0f2f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+        
+        .post-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-right: 4px solid #667eea;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .post-card:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .post-title {
+            color: #2c3e50;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+        
+        .post-snippet {
+            color: #666;
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+        
+        .post-meta {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin: 10px 0;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            color: white;
+        }
+        
+        .badge-success {
+            background: #27ae60;
+        }
+        
+        .badge-draft {
+            background: #f39c12;
+        }
+        
+        .categories {
+            margin: 10px 0;
+        }
+        
+        .category-tag {
+            display: inline-block;
+            background: #ecf0f1;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            margin: 2px;
+            color: #2c3e50;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: white;
+            background: #3498db;
+            font-size: 0.9em;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+        }
+        
+        .error {
+            background: #e74c3c;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            background: white;
+            border-radius: 8px;
+            color: #7f8c8d;
+            font-size: 1.2em;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        /* استایل صفحه‌بندی */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .page-link {
+            background: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #667eea;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            font-size: 0.9em;
+        }
+        
+        .page-link:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .page-link.active {
+            background: #667eea;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .page-link.disabled {
+            background: #bdc3c7;
+            color: white;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+        
+        .page-info {
+            background: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            color: #7f8c8d;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            font-size: 0.9em;
+        }
+        
+        /* ریسپانسیو */
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .header h1 { font-size: 1.5em; }
+            .post-meta { flex-direction: column; gap: 5px; }
+            .pagination { gap: 5px; }
+            .page-link { padding: 6px 10px; font-size: 0.8em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- هدر -->
+        <div class="header">
+            <h1>📝 لیست پست‌ها</h1>
+            {% if total_count %}
+                <p>مجموع: {{ total_count }} پست</p>
+            {% endif %}
+        </div>
+        
+        <!-- پیغام خطا -->
+        {% if error %}
+            <div class="error">
+                ❌ {{ error }}
+            </div>
+        {% endif %}
+        
+        <!-- لیست پست‌ها -->
+        {% if posts %}
+            {% for post in posts %}
+                <div class="post-card">
+                    <!-- عنوان -->
+                    <h2 class="post-title">
+                        {{ post.title|truncatechars:80 }}
+                    </h2>
+                    
+                    <!-- خلاصه -->
+                    {% if post.snippet %}
+                        <p class="post-snippet">{{ post.snippet }}</p>
+                    {% endif %}
+                    
+                    <!-- متادیتا -->
+                    <div class="post-meta">
+                        {% if post.author %}
+                            <span>✍️ {{ post.author }}</span>
+                        {% endif %}
+                        
+                        {% if post.created_at %}
+                            <span>📅 {{ post.created_at|slice:":10" }}</span>
+                        {% endif %}
+                        
+                        {% if post.published_date %}
+                            <span>📅 {{ post.published_date|slice:":10" }}</span>
+                        {% endif %}
+                        
+                        <span>
+                            {% if post.status %}
+                                <span class="badge badge-success">✅ منتشر شده</span>
+                            {% else %}
+                                <span class="badge badge-draft">⏳ پیش‌نویس</span>
+                            {% endif %}
+                        </span>
+                    </div>
+                    
+                    <!-- دسته‌بندی‌ها -->
+                    {% if post.category %}
+                        <div class="categories">
+                            {% for cat in post.category %}
+                                <span class="category-tag">📂 {{ cat.name }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    
+                    <!-- دکمه مشاهده -->
+                    {% if post.absolute_url %}
+                        <a href="{{ post.absolute_url }}" class="btn">🔍 مشاهده جزئیات</a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                📭 هیچ پستی برای نمایش وجود ندارد
+            </div>
+        {% endif %}
+        
+        <!-- صفحه‌بندی -->
+        {% if total_pages and total_pages > 1 %}
+            <div class="pagination">
+                <!-- دکمه اول و قبلی -->
+                {% if current_page > 1 %}
+                    <a href="?page=1" class="page-link">⏮️ اول</a>
+                    <a href="?page={{ current_page|add:"-1" }}" class="page-link">◀️ قبلی</a>
+                {% else %}
+                    <span class="page-link disabled">⏮️ اول</span>
+                    <span class="page-link disabled">◀️ قبلی</span>
+                {% endif %}
+                
+                <!-- شماره صفحات -->
+                {% for page_num in page_range %}
+                    {% if page_num == current_page %}
+                        <span class="page-link active">{{ page_num }}</span>
+                    {% else %}
+                        <a href="?page={{ page_num }}" class="page-link">{{ page_num }}</a>
+                    {% endif %}
+                {% endfor %}
+                
+                <!-- اطلاعات صفحه -->
+                <span class="page-info">صفحه {{ current_page }} از {{ total_pages }}</span>
+                
+                <!-- دکمه بعدی و آخر -->
+                {% if current_page < total_pages %}
+                    <a href="?page={{ current_page|add:"1" }}" class="page-link">بعدی ▶️</a>
+                    <a href="?page={{ total_pages }}" class="page-link">آخر ⏭️</a>
+                {% else %}
+                    <span class="page-link disabled">بعدی ▶️</span>
+                    <span class="page-link disabled">آخر ⏭️</span>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
