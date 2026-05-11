@@ -11,8 +11,7 @@ from .models import Post
 from accounts.mixins import LoginRequiredMixin
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-import requests
-import math
+
 
 # Create your views here.
 
@@ -47,6 +46,7 @@ class PostListView(ListView):
     #     return posts
 
 
+"""
 class PostListApiView(TemplateView):
     template_name = "post_list_api.html"
 
@@ -78,6 +78,11 @@ class PostListApiView(TemplateView):
             context["error"] = "خطا در دریافت داده از سرور"
 
         return context
+"""
+
+
+class PostListApiView(TemplateView):
+    template_name = "post_list_api_jquery.html"
 
 
 class PostDetailView(LoginRequiredMixin, DeleteView):

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لیست پست‌ها | وبلاگ</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="{% static "style.css" %}">
+</head>
+<body>
+
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <h1>📝 لیست پست‌ها</h1>
+        <p>آخرین مطالب منتشر شده در وبلاگ</p>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar" id="stats-bar" style="display:none;">
+        <span>📊 تعداد کل پست‌ها: <strong id="total-count">—</strong></span>
+        <span>📄 صفحه <strong id="current-page-num">—</strong></span>
+    </div>
+
+    <!-- Error -->
+    <div class="error-container" id="error">
+        <div style="font-size:2rem;margin-bottom:8px;">⚠️</div>
+        <strong>خطا در دریافت داده‌ها</strong>
+        <p style="margin-top:4px;font-size:0.85rem;">لطفاً اتصال اینترنت خود را بررسی کنید یا دوباره تلاش کنید.</p>
+        <button class="retry-btn" onclick="fetchPosts(currentUrl)">🔄 تلاش مجدد</button>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading-container" id="loading">
+        <div class="spinner"></div>
+        <span>در حال بارگذاری پست‌ها...</span>
+    </div>
+
+    <!-- Post List -->
+    <div class="post-list" id="post-list"></div>
+
+    <!-- Empty State (hidden by default) -->
+    <div class="empty-state" id="empty-state" style="display:none;">
+        <div class="icon">📭</div>
+        <strong>پستی یافت نشد</strong>
+        <p style="margin-top:4px;">هنوز هیچ پستی منتشر نشده است.</p>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+        <button id="btn-prev" disabled>
+            <span>❮</span> قبلی
+        </button>
+        <span class="page-indicator" id="page-info">—</span>
+        <button id="btn-next" disabled>
+            بعدی <span>❯</span>
+        </button>
+    </div>
+</div>
+
+<script src="https://lib.arvancloud.ir/jquery/3.6.3/jquery.min.js"></script>
+<script>
+    let currentUrl = '/blog/api/v1/post/';
+    let currentPage = 1;
+    let totalCount = 0;
+
+    function formatDate(isoString) {
+        const d = new Date(isoString);
+        return d.toLocaleDateString('fa-IR', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    }
+
+    function renderPosts(data) {
+        totalCount = data.count;
+        const $list = $('#post-list').empty();
+
+        // Update stats
+        $('#total-count').text(totalCount.toLocaleString('fa-IR'));
+        $('#current-page-num').text(currentPage.toLocaleString('fa-IR'));
+        $('#stats-bar').show();
+
+        // Hide empty state
+        $('#empty-state').hide();
+
+        if (data.results.length === 0) {
+            $('#empty-state').show();
+            $('#stats-bar').hide();
+            return;
+        }
+
+        $.each(data.results, function (i, post) {
+            const categories = post.category.map(function (cat) {
+                return `<span class="category-tag">${cat.name}</span>`;
+            }).join('');
+
+            const isPublished = post.status;
+            const statusBadge = isPublished
+                ? '<span class="badge badge-published">● منتشر شده</span>'
+                : '<span class="badge badge-draft">● پیش‌نویس</span>';
+
+            const cardClass = !isPublished ? ' post-card unpublished' : '';
+
+            const card = `
+                <div class="post-card${cardClass}">
+                    <div class="post-header">
+                        <a href="${post.absolute_url}" class="post-title">${post.title}</a>
+                        ${statusBadge}
+                    </div>
+                    <div class="post-meta">
+                        <span class="author">${post.author}</span>
+                        <span class="date">${formatDate(post.published_date)}</span>
+                    </div>
+                    <div class="post-snippet">${post.snippet}</div>
+                    ${categories ? `<div class="categories">${categories}</div>` : ''}
+                </div>`;
+
+            $list.append(card);
+        });
+
+        // Pagination buttons
+        $('#btn-prev').prop('disabled', !data.previous);
+        $('#btn-next').prop('disabled', !data.next);
+
+        if (data.previous) $('#btn-prev').data('url', data.previous);
+        if (data.next) $('#btn-next').data('url', data.next);
+
+        const pageSize = data.results.length;
+        $('#page-info').html(`صفحه <strong>${currentPage.toLocaleString('fa-IR')}</strong> از ${Math.ceil(totalCount / pageSize).toLocaleString('fa-IR')}`);
+    }
+
+    function fetchPosts(url) {
+        $('#loading').show();
+        $('#error').hide();
+        $('#post-list').empty();
+        $('#empty-state').hide();
+        $('#stats-bar').hide();
+
+        $.ajax({
+            url: url,
+            method: 'GET',
+            timeout: 10000,
+            success: function (data) {
+                $('#loading').hide();
+                renderPosts(data);
+            },
+            error: function (xhr, status, error) {
+                $('#loading').hide();
+                $('#error').show();
+                console.error('Error fetching posts:', error);
+            }
+        });
+    }
+
+    $('#btn-next').on('click', function () {
+        const url = $(this).data('url');
+        if (url) {
+            currentPage++;
+            fetchPosts(url);
+            $('html, body').animate({ scrollTop: 0 }, 300);
+        }
+    });
+
+    $('#btn-prev').on('click', function () {
+        const url = $(this).data('url');
+        if (url) {
+            currentPage--;
+            fetchPosts(url);
+            $('html, body').animate({ scrollTop: 0 }, 300);
+        }
+    });
+
+    // Initial load
+    fetchPosts(currentUrl);
+</script>
+
+</body>
+</html>

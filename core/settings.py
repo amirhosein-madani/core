@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "drf_spectacular_sidecar",
     "djoser",
+    "corsheaders",
 ]
 
 SPECTACULAR_SETTINGS = {
@@ -104,6 +105,7 @@ DJOSER = {
 }
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -198,3 +200,5 @@ AUTH_USER_MODEL = "accounts.User"
 
 
 FRONTEND_URL = "http://localhost:3000/accounts/api/v1/"
+
+CORS_ALLOW_ALL_ORIGINS = True
