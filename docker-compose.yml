@@ -1,5 +1,7 @@
 
 
+version: '3.8'
+
 services:
   backend:
     build: .
@@ -23,13 +25,33 @@ services:
     container_name: smtp4dev
     restart: unless-stopped
     ports:
-      - "3000:80"      # Web UI
-      - "25:25"        # SMTP Server
+      - "3000:80"
+      - "25:25"
     volumes:
-      - smtp4dev-data:/app/data   # ذخیره ایمیل‌ها
+      - smtp4dev-data:/app/data
+
+  locust-master:
+    image: locustio/locust
+    container_name: locust-master
+    ports:
+      - "8089:8089"
+    volumes:
+      - ./core/locust/locustfile.py:/mnt/locust/locustfile.py
+    command: -f /mnt/locust/locustfile.py --master -H http://backend:8000
+    depends_on:
+      - backend
+
+  locust-worker:
+    image: locustio/locust
+    volumes:
+      - ./core/locust/locustfile.py:/mnt/locust/locustfile.py
+    command: -f /mnt/locust/locustfile.py --worker --master-host=locust-master
+    depends_on:
+      - locust-master
 
 volumes:
   smtp4dev-data:
+
 # version: "3.9"  
 
 # # services:
