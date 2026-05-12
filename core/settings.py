@@ -202,3 +202,7 @@ AUTH_USER_MODEL = "accounts.User"
 FRONTEND_URL = "http://localhost:3000/accounts/api/v1/"
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+
+# Celery Configuration
+CELERY_BROKER_URL = "redis://redis:6379/1"
