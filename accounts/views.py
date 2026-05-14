@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
-
-
+from django.http import HttpResponse
 from .forms import LoginForm
 from django.contrib.auth import authenticate, login, logout
+from .tasks import send_email
 
 # Create your views here.
 
@@ -38,3 +38,8 @@ def user_login(request):
 
 def user_logout(request):
     logout(request)
+
+
+def sent_email(request):
+    send_email.delay()
+    return HttpResponse("Email sent successfully!")

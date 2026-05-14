@@ -66,6 +66,8 @@ INSTALLED_APPS = [
     "drf_spectacular_sidecar",
     "djoser",
     "corsheaders",
+    "django_celery_beat",
+    "django_celery_results",
 ]
 
 SPECTACULAR_SETTINGS = {
@@ -206,3 +208,6 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 # Celery Configuration
 CELERY_BROKER_URL = "redis://redis:6379/1"
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_TIMEZONE = 'Asia/Tehran'

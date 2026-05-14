@@ -30,10 +30,20 @@ services:
   worker:
     build: .
     command: celery -A core worker --loglevel=info  
+    volumes:
+      - .:/app
     depends_on:
       - backend
       - redis
-
+  beat:
+    build: .
+    command: celery -A core beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    volumes:
+      - .:/app
+    depends_on:
+      - backend
+      - redis
+      - worker
   smtp4dev:
     image: rnwood/smtp4dev:latest
     container_name: smtp4dev
