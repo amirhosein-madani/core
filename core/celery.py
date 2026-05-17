@@ -1,5 +1,6 @@
 import os
 from celery import Celery
+
 # from accounts.tasks import send_email
 
 # تنظیم Django settings module

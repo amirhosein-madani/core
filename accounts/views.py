@@ -1,7 +1,12 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .forms import LoginForm
+
+# from  django.core.cache import cache
 from django.contrib.auth import authenticate, login, logout
+from django.views.decorators.cache import cache_page
+from time import sleep
+import requests
+from .forms import LoginForm
 from .tasks import send_email
 
 # Create your views here.
@@ -43,3 +48,14 @@ def user_logout(request):
 def sent_email(request):
     send_email.delay()
     return HttpResponse("Email sent successfully!")
+
+
+def test_cache(request):
+    sleep(5)
+    return HttpResponse("this is a cache test")
+
+
+@cache_page(60)
+def test_cahing(request):
+    response = requests.get("http://localhost:8000/accounts/test-cache/")
+    return HttpResponse(response.text)
