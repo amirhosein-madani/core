@@ -212,3 +212,8 @@ class TestPostApi:
 
         response = api_client.delete(url, data)
         assert response.status_code == 403
+
+    def test_gold_api_response_204_status(self, api_client):
+        url = reverse("test_api_dollar")
+        response = api_client.delete(url)
+        assert response.status_code == 204
