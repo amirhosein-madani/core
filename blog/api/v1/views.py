@@ -1,17 +1,21 @@
-# from rest_framework.response import Response
-# from rest_framework.decorators import api_view , permission_classes
-# from rest_framework.views import APIView
-# from django.shortcuts import get_object_or_404
-# from django_filters import rest_framework as filters
+from rest_framework.response import Response
+from rest_framework import status
+from django.core.cache import cache
+from rest_framework.views import APIView
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from django_filters.rest_framework import DjangoFilterBackend
 from .permissions import IsOwnerOrReadOnly, IsAdminOrReadOnly
 from .serializers import PostSerializer, CategorySerializer
 from ...models import Post, Category
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import SearchFilter, OrderingFilter
 from .paginations import DefaultPagination
+from blog.tasks import get_brsapi
+
+# from django_filters import rest_framework as filters
+# from django.shortcuts import get_object_or_404
+# from rest_framework.decorators import api_view , permission_classes
 
 # @api_view(["GET","POST"])
 # @permission_classes([IsAuthenticated])
@@ -166,3 +170,38 @@ class CategoryModelViewSet(viewsets.ModelViewSet):
 #     class Meta:
 #         model = Product
 #         fields = ['category', 'in_stock']
+
+
+class TestApiView(APIView):
+
+    def get(self, request):
+        cache_key = "brsapi"
+
+        cached_data = cache.get(cache_key)
+        if cached_data:
+            return Response({"source": "cache", "data": cached_data})
+
+        task = get_brsapi.delay()
+
+        try:
+            result = task.get(timeout=15)
+
+            if result.get("success"):
+                cached_data = cache.get(cache_key)
+                if cached_data:
+                    return Response({"source": "api", "data": cached_data})
+
+            return Response(
+                {"error": result.get("error", "Unknown error")},
+                status=status.HTTP_503_SERVICE_UNAVAILABLE,
+            )
+
+        except Exception as e:
+            return Response(
+                {"error": f"Task failed: {str(e)}"},
+                status=status.HTTP_503_SERVICE_UNAVAILABLE,
+            )
+
+    def delete(self, request):
+        cache.delete("brsapi")
+        return Response({"message": "Cache cleared"}, status=status.HTTP_204_NO_CONTENT)

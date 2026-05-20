@@ -19,7 +19,7 @@ class Command(BaseCommand):
         user = User.objects.create_user(
             username=self.fake.user_name(),
             password=self.fake.password(),
-            phone_number=self.fake.phone_number(),
+            phone_number=self.fake.numerify('############'),
             email=self.fake.email(),
         )
 
