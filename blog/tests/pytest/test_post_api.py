@@ -184,7 +184,11 @@ class TestPostApi:
 
         api_client.force_authenticate(user=another_admin)
         url = reverse("post-detail", kwargs={"pk": random_post.pk})
-        response = api_client.put(url)
+        data = {
+            "title": "test2",
+        }
+
+        response = api_client.put(url, data)
         assert response.status_code == 403
 
     def test_post_detail_another_user_update_post(
@@ -203,14 +207,9 @@ class TestPostApi:
     def test_post_detail_another_user_delete_post(
         self, random_post, another_admin, api_client
     ):
-
         api_client.force_authenticate(user=another_admin)
         url = reverse("post-detail", kwargs={"pk": random_post.pk})
-        data = {
-            "title": "test2",
-        }
-
-        response = api_client.delete(url, data)
+        response = api_client.delete(url)
         assert response.status_code == 403
 
     def test_gold_api_response_204_status(self, api_client):
