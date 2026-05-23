@@ -16,7 +16,7 @@ class Command(BaseCommand):
 
         categories = list(Category.objects.all())
 
-        user = User.objects.create_user(
+        user = User.objects.create_superuser(
             username=self.fake.user_name(),
             password=self.fake.password(),
             phone_number=self.fake.numerify("############"),
@@ -33,7 +33,7 @@ class Command(BaseCommand):
         for _ in range(10):
             post = Post.objects.create(
                 author=profile,
-                title=self.fake.text(),
+                title=self.fake.sentence(nb_words=6, variable_nb_words=True),
                 content=self.fake.paragraph(nb_sentences=10),
                 status=choice([True, False]),
                 published_date=self.fake.date_time_this_year(),

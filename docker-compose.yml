@@ -1,6 +1,14 @@
 
 
 services:
+  db:
+    image: postgres:15-alpine
+    container_name: postgres_db
+    restart: always
+    env_file:
+        - .env
+    volumes:
+        - postgres_data:/var/lib/postgresql/data
 
   redis:
     container_name: redis
@@ -21,7 +29,7 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - smtp4dev
+      - db
       - redis
     environment:
       - EMAIL_HOST=smtp4dev
@@ -55,6 +63,7 @@ services:
       - smtp4dev-data:/app/data   # ذخیره ایمیل‌ها
 
 volumes:
+  postgres_data:
   smtp4dev-data:
 
 # version: "3.9"  
