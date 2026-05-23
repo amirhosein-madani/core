@@ -16,7 +16,7 @@ class Command(BaseCommand):
 
         categories = list(Category.objects.all())
 
-        user = User.objects.create_user(
+        user = User.objects.create_superuser(
             username=self.fake.user_name(),
             password=self.fake.password(),
             phone_number=self.fake.numerify("############"),
