@@ -2,27 +2,25 @@ from rest_framework import serializers
 from ...models import Comment
 from blog.models import Post
 
+
 class CommentSerializer(serializers.ModelSerializer):
 
-    snippet = serializers.ReadOnlyField(source = 'get_snippet')
-    user = serializers.CharField(read_only= True)
-    post = serializers.SlugRelatedField(
-        slug_field="title", 
-        queryset=Post.objects.all()
-    )
-    
+    snippet = serializers.ReadOnlyField(source="get_snippet")
+    user = serializers.CharField(read_only=True)
+    post = serializers.SlugRelatedField(slug_field="title", queryset=Post.objects.all())
+
     absolute_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Comment
-        fields = ['user' , 'post' , 'snippet', 'content', 'absolute_url' ,  'created_at']
+        fields = ["user", "post", "snippet", "content", "absolute_url", "created_at"]
 
-    def get_absolute_url(self , obj):
+    def get_absolute_url(self, obj):
 
         request = self.context.get("request")
         return request.build_absolute_uri(obj.get_absolute_url())
 
-    def to_representation(self , instance):
+    def to_representation(self, instance):
         """
         this is a function for overwrite fields to show
         """
@@ -38,7 +36,6 @@ class CommentSerializer(serializers.ModelSerializer):
 
             data.pop("content", None)
 
-     
         return data
 
     def create(self, validated_data):

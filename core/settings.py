@@ -57,7 +57,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "accounts",
     "blog",
-    'comment', 
+    "comment",
     "rest_framework",
     "rest_framework.authtoken",
     "templated_email",
@@ -69,7 +69,6 @@ INSTALLED_APPS = [
     "corsheaders",
     "django_celery_beat",
     "django_celery_results",
-    
 ]
 
 SPECTACULAR_SETTINGS = {
