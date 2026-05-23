@@ -1,14 +1,20 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.generics import RetrieveUpdateDestroyAPIView , ListCreateAPIView
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from ...models import Comment
-from .serializers import CommentSerializer
+from .serializers import CommentListSerializer , CommentDetailSerializer
 from .permissions import IsOwnerOrReadOnly
 
 
-class CommentModelViewSet(ModelViewSet):
+class CommentListGenericApiView(ListCreateAPIView):
     queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
+    serializer_class = CommentListSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["post", "user"]
+
+
+class CommentDetailGenericApiView(RetrieveUpdateDestroyAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentDetailSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]

@@ -3,43 +3,33 @@ from ...models import Comment
 from blog.models import Post
 
 
-class CommentSerializer(serializers.ModelSerializer):
+class CommentListSerializer(serializers.ModelSerializer):
 
     snippet = serializers.ReadOnlyField(source="get_snippet")
     user = serializers.CharField(read_only=True)
     post = serializers.SlugRelatedField(slug_field="title", queryset=Post.objects.all())
-
+    content = serializers.CharField(write_only=True)
     absolute_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Comment
-        fields = ["user", "post", "snippet", "content", "absolute_url", "created_at"]
+        fields = ["user", "post", "snippet", 'content',"absolute_url", "created_at"]
 
     def get_absolute_url(self, obj):
 
         request = self.context.get("request")
         return request.build_absolute_uri(obj.get_absolute_url())
 
-    def to_representation(self, instance):
-        """
-        this is a function for overwrite fields to show
-        """
-
-        request = self.context.get("request")
-        data = super().to_representation(instance)
-
-        if request.parser_context.get("kwargs").get("pk"):
-
-            data.pop("snippet", None)
-            data.pop("absolute_url", None)
-        else:
-
-            data.pop("content", None)
-
-        return data
-
     def create(self, validated_data):
 
         request = self.context.get("request")
         validated_data["user"] = request.user.profile
         return super().create(validated_data)
+
+class CommentDetailSerializer(serializers.ModelSerializer):
+    user = serializers.CharField(read_only=True)
+    post = serializers.SlugRelatedField(slug_field="title", read_only=True)
+
+    class Meta:
+        model = Comment
+        fields = ["user", "post", "content", "created_at"]
