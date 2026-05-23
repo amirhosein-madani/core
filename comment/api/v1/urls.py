@@ -1,4 +1,3 @@
-
 from .views import CommentListGenericApiView, CommentDetailGenericApiView
 from django.urls import path
 
