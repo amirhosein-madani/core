@@ -1,8 +1,8 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.generics import RetrieveUpdateDestroyAPIView , ListCreateAPIView
+from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from ...models import Comment
-from .serializers import CommentListSerializer , CommentDetailSerializer
+from .serializers import CommentListSerializer, CommentDetailSerializer
 from .permissions import IsOwnerOrReadOnly
 
 

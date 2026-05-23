@@ -13,7 +13,7 @@ class CommentListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ["user", "post", "snippet", 'content',"absolute_url", "created_at"]
+        fields = ["user", "post", "snippet", "content", "absolute_url", "created_at"]
 
     def get_absolute_url(self, obj):
 
@@ -25,6 +25,7 @@ class CommentListSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         validated_data["user"] = request.user.profile
         return super().create(validated_data)
+
 
 class CommentDetailSerializer(serializers.ModelSerializer):
     user = serializers.CharField(read_only=True)
