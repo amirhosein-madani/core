@@ -18,6 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
+from .views import HomepageView
 from django.conf import settings
 from drf_spectacular.views import (
     SpectacularAPIView,
@@ -25,6 +26,7 @@ from drf_spectacular.views import (
 )
 
 urlpatterns = [
+    path("", HomepageView.as_view(), name="home_page"),
     path("api-auth/", include("rest_framework.urls")),
     path("admin/", admin.site.urls),
     path("blog/", include("blog.urls")),

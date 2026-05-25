@@ -6,6 +6,7 @@ from .serializers import CommentListSerializer, CommentDetailSerializer
 from .permissions import IsOwnerOrReadOnly
 from .paginations import DefaultPagination
 
+
 class CommentListGenericApiView(ListCreateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentListSerializer
