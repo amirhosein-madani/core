@@ -185,6 +185,13 @@ class ResendVerificationApiView(APIView):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data["user"]
+
+        if user.is_verified:
+            return Response(
+                {"detail": "this user is already verified"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+            
         token = self.get_token_for_user(user)
         access_token = token["access_token"]
 
