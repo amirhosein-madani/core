@@ -198,7 +198,7 @@ class ResendVerificationApiView(APIView):
                 {"detail": "this user is already verified"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-            
+
         token = self.get_token_for_user(user)
         access_token = token["access_token"]
 
