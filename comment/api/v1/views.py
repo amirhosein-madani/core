@@ -11,7 +11,7 @@ class CommentListGenericApiView(ListCreateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentListSerializer
     pagination_class = DefaultPagination
-    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["post", "user"]
 

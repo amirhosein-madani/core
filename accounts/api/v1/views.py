@@ -106,9 +106,16 @@ class CustomDiscardAuthToken(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        request.user.auth_token.delete()
 
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        try:
+            request.user.auth_token.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        except Exception:
+            return Response(
+                {"detail": "user has no active token"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -185,6 +192,13 @@ class ResendVerificationApiView(APIView):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data["user"]
+
+        if user.is_verified:
+            return Response(
+                {"detail": "this user is already verified"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+            
         token = self.get_token_for_user(user)
         access_token = token["access_token"]
 
