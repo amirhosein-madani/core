@@ -4,12 +4,14 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from ...models import Comment
 from .serializers import CommentListSerializer, CommentDetailSerializer
 from .permissions import IsOwnerOrReadOnly
+from .paginations import DefaultPagination
 
 
 class CommentListGenericApiView(ListCreateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentListSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    pagination_class = DefaultPagination
+    permission_classes = [IsAuthenticatedOrReadOnly]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["post", "user"]
 
