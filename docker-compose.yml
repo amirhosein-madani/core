@@ -31,10 +31,6 @@ services:
     depends_on:
       - db
       - redis
-    environment:
-      - EMAIL_HOST=smtp4dev
-      - EMAIL_PORT=25
-      - EMAIL_USE_TLS=False
   worker:
     build: .
     command: celery -A core worker --loglevel=info  
